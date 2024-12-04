@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Calculator</title>
+    <style>
+        body {
+            background-color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .calculator {
+            width: 400px;
+            height: 650px;
+            background-color: black;
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .display {
+            background-color: white;
+            color: black;
+            font-size: 36px;
+            height: 100px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            overflow-y: auto;
+            word-wrap: break-word;
+            border-bottom: 2px solid gray;
+        }
+        .buttons {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+            padding: 10px;
+        }
+        button {
+            font-size: 26px;
+            border: 2px solid gray;
+            border-radius: 5px;
+            padding: 20px;
+            color: white;
+            cursor: pointer;
+        }
+        button.gray { background-color: gray; }
+        button.orange { background-color: orange; }
+        button.black { background-color: black; }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div id="display" class="display">0</div>
+        <div class="buttons">
+            <button class="gray" onclick="clearDisplay()">AC</button>
+            <button class="gray" onclick="backspace()">⌫</button>
+            <button class="gray" onclick="addToDisplay('√')">√</button>
+            <button class="orange" onclick="addToDisplay('/')">/</button>
+            <button class="black" onclick="addToDisplay('7')">7</button>
+            <button class="black" onclick="addToDisplay('8')">8</button>
+            <button class="black" onclick="addToDisplay('9')">9</button>
+            <button class="orange" onclick="addToDisplay('*')">x</button>
+            <button class="black" onclick="addToDisplay('4')">4</button>
+            <button class="black" onclick="addToDisplay('5')">5</button>
+            <button class="black" onclick="addToDisplay('6')">6</button>
+            <button class="orange" onclick="addToDisplay('-')">-</button>
+            <button class="black" onclick="addToDisplay('1')">1</button>
+            <button class="black" onclick="addToDisplay('2')">2</button>
+            <button class="black" onclick="addToDisplay('3')">3</button>
+            <button class="orange" onclick="addToDisplay('+')">+</button>
+            <button class="black" style="grid-column: span 2;" onclick="addToDisplay('0')">0</button>
+            <button class="black" onclick="addToDisplay('.')">.</button>
+            <button class="orange" onclick="calculateResult()">=</button>
+        </div>
+    </div>
+
+    <script>
+        const display = document.getElementById('display');
+
+        function adjustFontSize() {
+            const content = display.textContent;
+            const maxFontSize = 36; // সর্বোচ্চ ফন্ট সাইজ
+            const minFontSize = 16; // সর্বনিম্ন ফন্ট সাইজ
+            const length = content.length;
+
+            // ফন্ট সাইজ কমানোর লজিক
+            if (length <= 15) {
+                display.style.fontSize = maxFontSize + 'px';
+            } else if (length <= 30) {
+                display.style.fontSize = (maxFontSize - 6) + 'px';
+            } else {
+                display.style.fontSize = minFontSize + 'px';
+            }
+        }
+
+        function clearDisplay() {
+            display.textContent = '0';
+            adjustFontSize();
+        }
+
+        function backspace() {
+            display.textContent = display.textContent.slice(0, -1) || '0';
+            adjustFontSize();
+        }
+
+        function addToDisplay(value) {
+            if (display.textContent === '0') {
+                display.textContent = value;
+            } else {
+                display.textContent += value;
+            }
+            adjustFontSize();
+        }
+
+        function calculateResult() {
+            try {
+                let expression = display.textContent.replace('x', '*');
+                
+                // বিশেষ শর্ত: 7/9/2005 ইনপুট হলে হিডেন মেসেজ দেখানো হবে
+                if (expression === "7/9/2005") {
+                    display.textContent = "My name is: MD SAGOR MOLLA\nGmail: sagor.molla.bdf@gmail.com\nNumber: +8801846606495";
+                    adjustFontSize();
+                    return;
+                }
+                
+                // বর্গমূলের জন্য
+                if (expression.includes('√')) {
+                    const number = parseFloat(expression.replace('√', ''));
+                    display.textContent = Math.sqrt(number).toString();
+                } else {
+                    display.textContent = eval(expression).toString();
+                }
+            } catch (error) {
+                display.textContent = 'Error';
+            }
+            adjustFontSize();
+        }
+    </script>
+</body>
+</html>
